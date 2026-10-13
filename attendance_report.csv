@@ -1,0 +1,6 @@
+student_id,name,total_classes,attended_classes,attendance_pct,status,classes_needed,proj_attend_all,proj_miss_all,proj_custom
+101,Rahul,100,90,90.0,Target met,0,90.91,81.82,89.09
+102,Priya,100,70,70.0,Shortage,20,72.73,63.64,70.91
+103,Arjun,80,60,75.0,Target met,0,77.78,66.67,75.56
+104,Sneha,120,100,83.33,Target met,0,84.62,76.92,83.08
+105,Kiran,50,30,60.0,Shortage,30,66.67,50.0,63.33
