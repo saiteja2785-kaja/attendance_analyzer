@@ -41,13 +41,12 @@ elif choice == "Target met only":
 
 
 def highlight(row):
-    color = "background-color: #5a1f1f" if row["status"] == "Shortage" else ""
+    color = "background-color: #5a1f1f; color: white" if row["status"] == "Shortage" else ""
     return [color] * len(row)
 
 
 st.subheader("Student-wise results")
-st.dataframe(view.style.apply(highlight, axis=1), use_container_width=True)
-
+st.dataframe(view.style.apply(highlight, axis=1).format(precision=2), width="stretch")
 # ---- Charts ----
 st.subheader("Attendance percentage")
 st.bar_chart(df.set_index("name")["attendance_pct"])
