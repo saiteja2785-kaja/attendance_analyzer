@@ -41,6 +41,10 @@ def classes_needed(a, t, target):
     n = target * t - 100 * a
     d = 100 - target
     return -(-n // d)  # integer ceiling
+def safe_to_miss(a, t, target):
+    if a * 100 < target * t:
+        return 0
+    return (100 * a - target * t) // target
 
 
 def analyze(df, target, future, custom_attend):
@@ -56,8 +60,9 @@ def analyze(df, target, future, custom_attend):
     df["proj_attend_all"] = ((a + future) / (t + future) * 100).round(2)
     df["proj_miss_all"] = (a / (t + future) * 100).round(2)
     df["proj_custom"] = ((a + custom_attend) / (t + future) * 100).round(2)
+    
+    df["safe_to_miss"] = [safe_to_miss(x, y, target) for x, y in zip(a, t)]
     return df
-
 def ask_custom(future):
     while True:
         text = input(f"Classes you expect to attend out of the next {future} (0 to {future}): ")

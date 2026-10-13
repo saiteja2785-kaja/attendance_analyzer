@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 
 from main import load, classes_needed, analyze
-
+from main import load, classes_needed, analyze, safe_to_miss
 
 def one_student(total, attended):
     return pd.DataFrame({
@@ -89,3 +89,16 @@ def test_load_rejects_missing_column(tmp_path):
 def test_load_missing_file():
     with pytest.raises(SystemExit):
         load("does_not_exist.csv")
+
+# ---- safe_to_miss ----
+def test_safe_to_miss_values():
+    assert safe_to_miss(90, 100, 75) == 20
+    assert safe_to_miss(100, 120, 75) == 13
+    assert safe_to_miss(60, 80, 75) == 0   # exactly 75%, no room
+    assert safe_to_miss(70, 100, 75) == 0  # already short
+
+
+def test_safe_to_miss_is_the_maximum():
+    m = safe_to_miss(100, 120, 75)
+    assert 100 * 100 >= 75 * (120 + m)        # still at target
+    assert 100 * 100 < 75 * (120 + m + 1)     # one more miss drops below

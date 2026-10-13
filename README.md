@@ -35,3 +35,4 @@ python -m pytest
 ```
 python -m streamlit run app.py
 ```
+- Safe-to-miss count: how many classes in a row a student can skip and stay at the target
