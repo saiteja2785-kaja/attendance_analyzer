@@ -31,3 +31,7 @@ student_id,name,total_classes,attended_classes
 ```
 python -m pytest
 ```
+## Dashboard
+```
+python -m streamlit run app.py
+```
