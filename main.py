@@ -5,33 +5,57 @@ FUTURE = 10   # upcoming classes for projections
 CUSTOM_ATTEND = 9  # classes you expect to attend out of FUTURE
 
 
+
 def load(path):
     try:
         df = pd.read_csv(path)
     except FileNotFoundError:
-        raise SystemExit(f"File not found: {path}")
+        raise ValueError(f"File not found: {path}")
+    except pd.errors.EmptyDataError:
+        raise ValueError("The CSV file is empty.")
+    except pd.errors.ParserError:
+        raise ValueError("The CSV file is malformed.")
 
-    required = ["student_id", "name", "total_classes", "attended_classes"]
+    if df.empty:
+        raise ValueError("No student records found in the CSV.")
+
+    required = [
+        "student_id",
+        "name",
+        "total_classes",
+        "attended_classes",
+    ]
+
     missing = [c for c in required if c not in df.columns]
+
     if missing:
-        raise SystemExit(f"Missing columns: {missing}")
+        raise ValueError(f"Missing columns: {missing}")
+
     if df[required].isnull().any().any():
-        raise SystemExit("Missing values found in the CSV")
+        raise ValueError("Missing values found in the CSV.")
+
     if df["student_id"].duplicated().any():
-        raise SystemExit("Duplicate student IDs found")
+        raise ValueError("Duplicate student IDs found.")
 
     for c in ["total_classes", "attended_classes"]:
         df[c] = pd.to_numeric(df[c], errors="coerce")
+
         if df[c].isnull().any() or (df[c] % 1 != 0).any():
-            raise SystemExit(f"{c} must contain whole numbers")
+            raise ValueError(f"{c} must contain whole numbers.")
+
         df[c] = df[c].astype(int)
 
     if (df["total_classes"] <= 0).any():
-        raise SystemExit("total_classes must be greater than 0")
+        raise ValueError("total_classes must be greater than 0.")
+
     if (df["attended_classes"] < 0).any():
-        raise SystemExit("attended_classes cannot be negative")
+        raise ValueError("attended_classes cannot be negative.")
+
     if (df["attended_classes"] > df["total_classes"]).any():
-        raise SystemExit("attended_classes cannot exceed total_classes")
+        raise ValueError(
+            "attended_classes cannot exceed total_classes."
+        )
+
     return df
 
 

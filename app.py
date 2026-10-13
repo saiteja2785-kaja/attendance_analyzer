@@ -61,3 +61,14 @@ st.download_button(
     file_name="attendance_report.csv",
     mime="text/csv",
 )
+
+try:
+    df = analyze(
+        load(source),
+        int(target),
+        int(future),
+        int(custom),
+    )
+except (ValueError, TypeError) as e:
+    st.error(str(e))
+    st.stop()
